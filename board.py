@@ -10,12 +10,15 @@ class Board:
         self.snakes = []
         self.matrix = np.zeros((SIZE, SIZE), dtype=bool)
 
-        start = [random.randrange(20), random.randrange(10)] 
+        start = [random.randrange(10), random.randrange(10)] 
+        start2 = [19 - start[0], 19 - start[1]]
+        print(start, start2)
         #TOD0 lag metode som passer på at start og start_dir passer sammen
         start_dir = random.randrange(4) # N = 0, E = 1, S = 2, W  = 3
+        start_dir2 = (start_dir + 2) % 4
 
         self.snakes.append(Snake(start, len(self.snakes)+1, start_dir))
-        self.snakes.append(Snake(start, len(self.snakes)+1, start_dir))
+        self.snakes.append(Snake(start2, len(self.snakes)+1, start_dir2))
         self.vinner = 0
 
         self.gen = self.game()
@@ -48,7 +51,6 @@ class Board:
 
     def game(self):
         while self.vinner == 0:
-            #yield self.matrix
             player = 0
             for snake in self.snakes:
                 player += 1
@@ -68,6 +70,7 @@ class Board:
                     else:
                         self.vinner = 3     
                     print(f"{self.vinner} har vunnet")
+                    raise StopIteration()
                 else:
                     self.matrix[snake.y][snake.x] = True   
             yield self.matrix                 
@@ -77,8 +80,8 @@ class Snake:
     def __init__(self, start, player, dir):
         self.y = start[0]
         self.x = start[1]
-        if player == 2:
-            self.x += 10
+        #if player == 2:
+            #self.x += 10
         self.dir = dir
 
 if __name__ == "__main__":

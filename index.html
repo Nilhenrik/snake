@@ -29,7 +29,6 @@
           .then((res) => res.json())
           .then((res) => {
             const size = c.width / res.board.length;
-            console.log("got res");
             for (const [idxY, arr] of res.board.entries()) {
               for (const [idxX, filledIn] of arr.entries()) {
                 ctx.fillStyle = filledIn ? "#00FF00" : "#000000";
@@ -38,7 +37,7 @@
             }
             setTimeout(() => {
               getNext();
-            }, 1500);
+            }, 500);
           })
           .catch((err) => console.log(err));
         p1 = -1;
@@ -92,7 +91,7 @@
             p1 = 0;
             break;
           }
-          case 67: {
+          case 68: {
             // höger p1
             p1 = 1;
             break;
