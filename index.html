@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake PvP</title>
+    <style>
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <canvas id="canvas" width="600" height="600"> </canvas>
+    </main>
+    <script>
+      const c = document.getElementById("canvas");
+      const ctx = c.getContext("2d");
+
+      let p1 = -1;
+      let p2 = -1;
+
+      function getNext() {
+        fetch(`/next?p1=${p1}&p2=${p2}`)
+          .then((res) => res.json())
+          .then((res) => {
+            const size = c.width / res.board.length;
+            console.log("got res");
+            for (const [idxY, arr] of res.board.entries()) {
+              for (const [idxX, filledIn] of arr.entries()) {
+                ctx.fillStyle = filledIn ? "#00FF00" : "#000000";
+                ctx.fillRect(idxX * size, idxY * size, size, size);
+              }
+            }
+            setTimeout(() => {
+              getNext();
+            }, 1500);
+          })
+          .catch((err) => console.log(err));
+        p1 = -1;
+        p2 = -1;
+      }
+      getNext();
+
+      document.addEventListener("keydown", (event) => {
+        //   if((event.keyCode == 13 && ){
+        //   add
+        // }
+        console.log("hey2");
+        if (p1 === -2 || p2 === -2) {
+          p1 = -1;
+          p2 = -1;
+          return;
+        }
+        switch (event.keyCode) {
+          case 13: {
+            p1 = -2; // stopp
+            p2 = -2;
+            break;
+          }
+          case 37: {
+            // vänster p2
+            p2 = 3;
+            break;
+          }
+          case 38: {
+            // opp p2
+            p2 = 0;
+            break;
+          }
+          case 39: {
+            // höger p2
+            p2 = 1;
+            break;
+          }
+          case 40: {
+            // ner p2
+            p2 = 2;
+            break;
+          }
+          case 65: {
+            // vänster p1
+            p1 = 3;
+            break;
+          }
+          case 87: {
+            // opp p1
+            p1 = 0;
+            break;
+          }
+          case 67: {
+            // höger p1
+            p1 = 1;
+            break;
+          }
+          case 83: {
+            // ner p1
+            p1 = 2;
+          }
+        }
+      });
+
+      /*document.addEventListener("keyup", (event) => {
+        //   if((event.keyCode == 13 && ){
+        //   add
+        // }
+        setTimeout(() => {
+          if (
+            [13, 37, 38, 39, 40, 65, 87, 67, 83].indexOf(event.keyCode) != -1
+          ) {
+            p1 = -1;
+            p2 = -1;
+            console.log("inni if-setning");
+          }
+        }, 500);
+      });*/
+    </script>
+  </body>
+</html>
