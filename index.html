@@ -38,21 +38,21 @@
             if (res.message !== "") console.log(res.message);
             ctx.fillStyle = "#FF0000";
             ctx.fillRect(
-              res.player1[0] * size,
-              res.player1[1] * size,
-              size,
-              size
+              res.player1[0] * size + size / 4,
+              res.player1[1] * size + size / 4,
+              size - size / 2,
+              size - size / 2
             );
             ctx.fillStyle = "#0000FF";
             ctx.fillRect(
-              res.player2[0] * size,
-              res.player2[1] * size,
-              size,
-              size
+              res.player2[0] * size + size / 4,
+              res.player2[1] * size + size / 4,
+              size - size / 2,
+              size - size / 2
             );
             setTimeout(() => {
               getNext();
-            }, 500);
+            }, 800);
           })
           .catch((err) => console.log(err));
         p1 = -1;
@@ -61,9 +61,6 @@
       getNext();
 
       document.addEventListener("keydown", (event) => {
-        //   if((event.keyCode == 13 && ){
-        //   add
-        // }
         if (p1 === -2 || p2 === -2) {
           p1 = -1;
           p2 = -1;
@@ -81,7 +78,7 @@
             break;
           }
           case 38: {
-            // opp p2
+            // uppåt p2
             p2 = 0;
             break;
           }
@@ -91,7 +88,7 @@
             break;
           }
           case 40: {
-            // ner p2
+            // neråt p2
             p2 = 2;
             break;
           }
@@ -101,7 +98,7 @@
             break;
           }
           case 87: {
-            // opp p1
+            // uppåt p1
             p1 = 0;
             break;
           }
@@ -111,26 +108,11 @@
             break;
           }
           case 83: {
-            // ner p1
+            // neråt p1
             p1 = 2;
           }
         }
       });
-
-      /*document.addEventListener("keyup", (event) => {
-        //   if((event.keyCode == 13 && ){
-        //   add
-        // }
-        setTimeout(() => {
-          if (
-            [13, 37, 38, 39, 40, 65, 87, 67, 83].indexOf(event.keyCode) != -1
-          ) {
-            p1 = -1;
-            p2 = -1;
-            console.log("inni if-setning");
-          }
-        }, 500);
-      });*/
     </script>
   </body>
 </html>

@@ -104,14 +104,52 @@ class RandomAI:
         self.snake = snake
         self.matrix = matrix
         self.gen = self.generator()
+    
+    class CheckAreaState:
+        pass
+
+    def __check_area(self, x, y, dir=-1, state=None):
+        if state == None:
+            state = self.CheckAreaState()
+            state.checked = []
+            state.acc = 0
+            if   dir == 0: y -= 1
+            elif dir == 1: x += 1
+            elif dir == 2: y += 1
+            elif dir == 3: x -= 1
+        
+        if not (0 <= x < 20 and 0 <= y < 20) or self.matrix[y, x]:
+            return 0
+
+        state.checked.append((x, y))
+        dir = -1 if dir == -1 else (dir + 2) % 4
+        for i in range(4):
+            if i != dir:
+                next_x, next_y = x, y
+                if   i == 0: next_y -= 1
+                elif i == 1: next_x += 1
+                elif i == 2: next_y += 1
+                elif i == 3: next_x -= 1
+                if 0 <= next_x < 20 and 0 <= next_y < 20 and not self.matrix[next_y, next_x] and (next_x, next_y) not in state.checked:
+                    state.acc += 1
+                    self.__check_area(next_x, next_y, i, state)
+
+        return state.acc
 
     def generator(self):
         while True:
-            choices = [-1, -1,  (self.snake.dir + 1) % 4, (self.snake.dir + 3) % 4]
+            choices = [-1, (self.snake.dir + 1) % 4, (self.snake.dir + 3) % 4, -1, -1]
+            areas = [self.__check_area(self.snake.x, self.snake.y, self.snake.dir if d == -1 else d) for d in choices[:3] ]
+            equal_areas = areas[0] == areas[1] == areas[2]
+            self.snake.game.message += f"p{self.snake.player}:{areas}\n"
             while choices:
-                choice_index = random.randrange(len(choices))
+                if equal_areas:
+                    choice_index = random.randrange(len(choices))
+                else:
+                    choice_index = random.choice([x for x in enumerate(areas) if x[1] == max(areas)])[0]
                 choice = choices[choice_index]
                 bad_choice = False
+
                 x, y = self.snake.x, self.snake.y
                 dir = self.snake.dir if choice == -1 else choice
                 if   dir == 0: y -= 1
@@ -119,6 +157,8 @@ class RandomAI:
                 elif dir == 2: y += 1
                 elif dir == 3: x -= 1
                 try:
+                    if x < 0 or y < 0:
+                        raise IndexError()
                     if self.matrix[y, x]:
                         bad_choice = True
                 except IndexError:
@@ -129,9 +169,10 @@ class RandomAI:
                     self.snake.game.message += f"sletta {choice_index}, "
                     self.snake.game.message += f"gjenværende {choices}\n"
                     continue
+                self.snake.game.message += f"player {self.snake.player} valgte {choice}\n"
                 yield choice
                 break
-            if not choices:
+            else:
                 self.snake.game.message += f"player {self.snake.player} will lose\n"
                 yield -1
 
