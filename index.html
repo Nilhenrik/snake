@@ -35,6 +35,21 @@
                 ctx.fillRect(idxX * size, idxY * size, size, size);
               }
             }
+            if (res.message !== "") console.log(res.message);
+            ctx.fillStyle = "#FF0000";
+            ctx.fillRect(
+              res.player1[0] * size,
+              res.player1[1] * size,
+              size,
+              size
+            );
+            ctx.fillStyle = "#0000FF";
+            ctx.fillRect(
+              res.player2[0] * size,
+              res.player2[1] * size,
+              size,
+              size
+            );
             setTimeout(() => {
               getNext();
             }, 500);
@@ -49,7 +64,6 @@
         //   if((event.keyCode == 13 && ){
         //   add
         // }
-        console.log("hey2");
         if (p1 === -2 || p2 === -2) {
           p1 = -1;
           p2 = -1;
